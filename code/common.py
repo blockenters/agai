@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-common.py — 모든 실습에서 공통으로 쓰는 도우미.
+common.py — 모든 실습 공통 파일
 
-핵심 목적:
+목적:
   - .env 의 API 키를 한 곳에서 로드한다.
   - Gemini(주력) / OpenAI(보조) 모델 객체를 일관되게 생성한다.
   - 실습 데이터(data/) 경로를 쉽게 찾는다.
@@ -14,7 +14,7 @@ import os
 import pathlib
 from dotenv import load_dotenv
 
-# 프로젝트 루트(= 이 파일의 부모의 부모: code/ 의 상위)
+# 프로젝트 루트
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 DOCS = DATA / "docs"
@@ -27,7 +27,7 @@ GEMINI_EMBED_MODEL = os.getenv("GEMINI_EMBED_MODEL", "models/gemini-embedding-00
 
 
 def require_key(name: str) -> str:
-    """환경변수 키가 없으면 친절한 안내와 함께 종료."""
+    """환경변수 키가 없으면 종료."""
     val = os.getenv(name)
     if not val or val.startswith("여기에"):
         raise SystemExit(
@@ -65,7 +65,7 @@ def get_embeddings(provider: str = "gemini"):
         require_key("GOOGLE_API_KEY")
         from langchain_google_genai import GoogleGenerativeAIEmbeddings
         # gemini-embedding-001 기본 출력은 3072차원. 실습 저장·속도를 위해 768로 고정.
-        # (768/1536/3072 중 선택 가능 — Matryoshka 표현학습)
+        # (768/1536/3072 중 선택 가능)
         return GoogleGenerativeAIEmbeddings(
             model=GEMINI_EMBED_MODEL, output_dimensionality=768)
     elif provider == "openai":
