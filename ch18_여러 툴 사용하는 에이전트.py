@@ -63,7 +63,7 @@ from langchain.agents import create_agent
 from common import get_chat
 
 # RAG 도구(문서) + DB 도구 2종(주문·재고)을 '같은 목록'에
-tools = [build_policy_tool(), get_order_status, get_stock]
+tools = [build_policy_tool, get_order_status, get_stock]
 llm = get_chat(temperature=0)
 agent = create_agent(
     llm,
