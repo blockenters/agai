@@ -4,6 +4,7 @@ from common import get_chat
 
 # 29강 운영 자산을 그대로 재사용 (설정 분리·구조적 로깅·재시도 래퍼)
 from ch29_deploy import load_config, setup_logging, robust_invoke
+from ch30_final import answer
 
 try:
     from fastapi import FastAPI
@@ -31,8 +32,7 @@ try:
     def chat(body: ChatIn):
         """[POST /chat] 사용자 메시지를 받아 견고한 래퍼로 답변을 생성한다."""
         logger.info(f"요청 수신(thread={body.thread_id}): {body.message}")
-        reply = robust_invoke(llm, body.message, logger,
-                              max_retries=cfg["llm"]["max_retries"])  # 재시도+폴백
+        reply = answer(body.message, body.thread_id)   # 완성된 에이전트!
         return {"thread_id": body.thread_id, "reply": reply}
 
     @app.get("/health")
